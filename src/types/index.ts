@@ -94,3 +94,16 @@ export interface SearchFilters {
     end: string;
   };
 }
+
+// Analytics Context Type
+export interface AnalyticsContextType {
+  sessionId: string;
+  userType: 'demo' | 'waitlisted' | 'authenticated' | 'anonymous';
+  demoMode: boolean;
+  trackEvent: (eventName: string, properties?: Record<string, any>) => void;
+  trackPageView: (page: string, referrer?: string) => void;
+  trackFeatureInteraction: (feature: string, action: string, properties?: Record<string, any>) => void;
+  trackConversion: (source: string, email?: string) => void;
+  trackWaitlistCTA: (source: string, properties?: Record<string, any>) => void;
+  initSession: (landingPage: string, referrer?: string) => void;
+}
