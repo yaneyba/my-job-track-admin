@@ -1,20 +1,22 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Bar, Line, Pie } from 'recharts';
 import {
   BarChart,
   LineChart,
   PieChart,
+  Bar,
+  Line,
+  Pie,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
+  Cell,
 } from 'recharts';
 import { apiClient } from '@/lib/api';
 import { LoadingSpinner } from '@/components/UI/LoadingSpinner';
-import { AnalyticsFilters } from '@/types';
+import { AnalyticsFilters, AnalyticsDashboardData } from '@/types';
 
 const defaultFilters: AnalyticsFilters = {
   dateRange: {
@@ -26,10 +28,12 @@ const defaultFilters: AnalyticsFilters = {
 export function Analytics() {
   const [filters, setFilters] = useState<AnalyticsFilters>(defaultFilters);
 
-  const { data: analyticsData, isLoading, error } = useQuery({
+  const { data: analyticsData, isLoading, error, refetch } = useQuery({
     queryKey: ['analytics-dashboard', filters],
     queryFn: () => apiClient.getAnalyticsDashboard(filters),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   if (isLoading) {
@@ -46,9 +50,19 @@ export function Analytics() {
         <div className="text-red-600 mb-4">
           Failed to load analytics data
         </div>
-        <p className="text-gray-500">
+        <p className="text-gray-500 mb-4">
           {error instanceof Error ? error.message : 'Unknown error occurred'}
         </p>
+        <button
+          onClick={() => refetch()}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+        >
+          Retry
+        </button>
+        <div className="mt-4 text-sm text-gray-400">
+          <p>If the problem persists, the analytics API may be temporarily unavailable.</p>
+          <p>Current date range: {filters.dateRange.start} to {filters.dateRange.end}</p>
+        </div>
       </div>
     );
   }
@@ -66,7 +80,32 @@ export function Analytics() {
     );
   }
 
-  const { overview, sessions, events, features, funnels } = analyticsData;
+  // Ensure we have all required data sections
+  const overview = analyticsData.overview || {
+    totalSessions: 0,
+    totalEvents: 0,
+    conversionRate: 0,
+    averageSessionDuration: 0,
+    userTypeBreakdown: []
+  };
+
+  const sessions = analyticsData.sessions || {
+    dailySessions: [],
+    sessionDuration: [],
+    geographicData: []
+  };
+
+  const events = analyticsData.events || {
+    topEvents: []
+  };
+
+  const features = analyticsData.features || {
+    topFeatures: []
+  };
+
+  const funnels = analyticsData.funnels || {
+    conversionFunnel: []
+  };
 
   return (
     <div className="space-y-6">
@@ -202,7 +241,7 @@ export function Analytics() {
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Geographic Distribution</h3>
           <div className="space-y-3">
-            {sessions.geographicData.slice(0, 5).map((geo) => (
+            {sessions.geographicData?.slice(0, 5).map((geo: any) => (
               <div key={geo.country} className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">{geo.country}</span>
                 <div className="flex items-center space-x-2">
@@ -215,7 +254,7 @@ export function Analytics() {
                   <span className="text-sm font-medium">{geo.sessions}</span>
                 </div>
               </div>
-            ))}
+            )) || null}
           </div>
         </div>
       </div>
@@ -225,7 +264,7 @@ export function Analytics() {
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Top Events</h3>
           <div className="space-y-3">
-            {events.topEvents.slice(0, 8).map((event) => (
+            {events.topEvents?.slice(0, 8).map((event: any) => (
               <div key={event.eventName} className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">{event.eventName}</span>
                 <div className="flex items-center space-x-2">
@@ -233,7 +272,7 @@ export function Analytics() {
                   <span className="text-xs text-gray-400">({event.uniqueSessions} sessions)</span>
                 </div>
               </div>
-            ))}
+            )) || null}
           </div>
         </div>
 
