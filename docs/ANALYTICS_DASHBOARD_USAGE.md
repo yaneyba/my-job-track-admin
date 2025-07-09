@@ -27,8 +27,8 @@ This guide provides step-by-step instructions for using the Analytics data in th
    ```
 2. Navigate to `http://localhost:3001` in your browser
 3. Log in with demo credentials:
-   - Email: `your-email`
-   - Password: `your-password`
+   - Email: `analytics@test.com`
+   - Password: `analytics123`
 4. Click on "Analytics" in the navigation menu
 
 **✅ System Status**: As of July 8, 2025, the analytics system is fully operational with all backend issues resolved. All endpoints support date filtering and real-time data display.
