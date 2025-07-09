@@ -17,12 +17,13 @@ export default defineConfig({
     }
   },
   server: {
-    port: 3001,
+    port: 5173,
     proxy: {
       '/api': {
         target: 'https://myjobtrack-api.yeb404974.workers.dev',
         changeOrigin: true,
-        secure: true
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   }

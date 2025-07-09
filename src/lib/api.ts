@@ -1,6 +1,6 @@
 import { Customer, Job, User, DashboardStats, ApiResponse, PaginatedResponse, SearchFilters, AnalyticsFilters, AnalyticsDashboardData, AnalyticsOverview, AnalyticsSessionMetrics, AnalyticsEventMetrics, FeatureUsageMetrics, FunnelAnalytics, ABTestResults } from '@/types';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://myjobtrack-api.yeb404974.workers.dev';
 
 class ApiClient {
   private token: string | null = null;
