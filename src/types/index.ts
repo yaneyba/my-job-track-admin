@@ -95,6 +95,9 @@ export interface SearchFilters {
   };
 }
 
+// Analytics Types
+export type TrackingProperties = Record<string, any>;
+
 // Analytics Context Type
 export interface AnalyticsContextType {
   sessionId: string;

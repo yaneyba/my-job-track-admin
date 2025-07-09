@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { AnalyticsContextType } from '../types';
+import { AnalyticsContextType } from '@/types';
 
 const AnalyticsContext = createContext<AnalyticsContextType | null>(null);
 

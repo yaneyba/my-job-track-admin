@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '../components/UI/Button';
-import { Input } from '../components/UI/Input';
+import { Button } from '@/components/UI/Button';
+import { Input } from '@/components/UI/Input';
 import { toast } from 'react-hot-toast';
 
 export function Settings() {

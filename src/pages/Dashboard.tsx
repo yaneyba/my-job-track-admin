@@ -1,8 +1,8 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '../lib/api';
-import { formatCurrency, formatDate } from '../lib/utils';
-import { Badge } from '../components/UI/Badge';
+import { apiClient } from '@/lib/api';
+import { formatCurrency, formatDate } from '@/lib/utils';
+import { Badge } from '@/components/UI/Badge';
 import {
   UsersIcon,
   BriefcaseIcon,

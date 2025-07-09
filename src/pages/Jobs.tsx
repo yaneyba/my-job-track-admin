@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 import { toast } from 'react-hot-toast';
-import { apiClient } from '../lib/api';
-import { Job, SearchFilters } from '../types';
-import { formatDate, formatCurrency, getStatusColor, getPriorityColor } from '../lib/utils';
-import { DataTable } from '../components/UI/DataTable';
-import { Button } from '../components/UI/Button';
-import { Input } from '../components/UI/Input';
-import { Badge } from '../components/UI/Badge';
+import { apiClient } from '@/lib/api';
+import { Job, SearchFilters } from '@/types';
+import { formatDate, formatCurrency, getStatusColor, getPriorityColor } from '@/lib/utils';
+import { DataTable } from '@/components/UI/DataTable';
+import { Button } from '@/components/UI/Button';
+import { Input } from '@/components/UI/Input';
+import { Badge } from '@/components/UI/Badge';
 import {
   PlusIcon,
   PencilIcon,

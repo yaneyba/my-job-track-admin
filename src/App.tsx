@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
-import { Layout } from './components/Layout/Layout';
-import { Dashboard } from './pages/Dashboard';
-import { Customers } from './pages/Customers';
-import { Jobs } from './pages/Jobs';
-import { Analytics } from './pages/Analytics';
-import { Settings } from './pages/Settings';
+import { Layout } from '@/components/Layout/Layout';
+import { Dashboard } from '@/pages/Dashboard';
+import { Customers } from '@/pages/Customers';
+import { Jobs } from '@/pages/Jobs';
+import { Analytics } from '@/pages/Analytics';
+import { Settings } from '@/pages/Settings';
 
 function App() {
   return (

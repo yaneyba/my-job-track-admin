@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 import { toast } from 'react-hot-toast';
-import { apiClient } from '../lib/api';
-import { Customer, SearchFilters } from '../types';
-import { formatDate, debounce } from '../lib/utils';
-import { DataTable } from '../components/UI/DataTable';
-import { Button } from '../components/UI/Button';
-import { Input } from '../components/UI/Input';
+import { apiClient } from '@/lib/api';
+import { Customer, SearchFilters } from '@/types';
+import { formatDate, debounce } from '@/lib/utils';
+import { DataTable } from '@/components/UI/DataTable';
+import { Button } from '@/components/UI/Button';
+import { Input } from '@/components/UI/Input';
 import {
   PlusIcon,
   PencilIcon,

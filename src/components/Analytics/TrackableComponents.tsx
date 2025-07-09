@@ -1,6 +1,6 @@
 import React, { ButtonHTMLAttributes, AnchorHTMLAttributes, FormHTMLAttributes } from 'react';
-import { useAnalytics } from '../../contexts/AnalyticsContext';
-import { TrackingProperties } from '../../types';
+import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { TrackingProperties } from '@/types';
 
 // Trackable Button Component
 interface TrackableButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

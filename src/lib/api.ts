@@ -1,4 +1,4 @@
-import { Customer, Job, User, DashboardStats, ApiResponse, PaginatedResponse, SearchFilters } from '../types';
+import { Customer, Job, User, DashboardStats, ApiResponse, PaginatedResponse, SearchFilters } from '@/types';
 
 const API_BASE_URL = '/api';
 
