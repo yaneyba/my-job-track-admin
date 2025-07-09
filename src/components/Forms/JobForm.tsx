@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
-import { Job, Customer } from '@/types';
+import { Job } from '@/types';
 import { Input, Textarea, Select } from '@/components/UI/Input';
 import { Button } from '@/components/UI/Button';
 import { Modal, ModalFooter } from '@/components/UI/Modal';
@@ -12,9 +12,7 @@ import {
   CalendarIcon,
   CurrencyDollarIcon,
   ClockIcon,
-  MapPinIcon,
-  DocumentTextIcon,
-  ExclamationTriangleIcon
+  MapPinIcon
 } from '@heroicons/react/24/outline';
 
 interface JobFormProps {
@@ -65,8 +63,7 @@ export function JobForm({
   onClose, 
   onSubmit, 
   job, 
-  mode,
-  loading = false 
+  mode
 }: JobFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -75,8 +72,7 @@ export function JobForm({
     handleSubmit,
     reset,
     watch,
-    formState: { errors, isDirty },
-    setValue
+    formState: { errors, isDirty }
   } = useForm<JobFormData>({
     defaultValues: {
       customerId: '',
@@ -121,7 +117,7 @@ export function JobForm({
         status: job?.status || 'scheduled',
         priority: job?.priority || 'medium',
         scheduledDate: job?.scheduledDate || job?.due_date?.split('T')[0] || '',
-        estimatedHours: job?.estimatedHours || job?.estimated_hours || 0,
+        estimatedHours: job?.estimated_hours || 0,
         hourlyRate: job?.hourlyRate || 0,
         location: job?.location || '',
         notes: job?.notes || '',
@@ -137,7 +133,10 @@ export function JobForm({
         ...data,
         totalAmount: estimatedTotal,
         estimatedHours: Number(data.estimatedHours),
-        hourlyRate: Number(data.hourlyRate)
+        hourlyRate: Number(data.hourlyRate),
+        status: data.status as 'pending' | 'scheduled' | 'in-progress' | 'completed' | 'cancelled',
+        priority: data.priority as 'low' | 'medium' | 'high' | 'urgent',
+        paymentStatus: data.paymentStatus as 'paid' | 'unpaid' | 'partially-paid'
       };
       await onSubmit(submitData);
       onClose();
@@ -353,7 +352,7 @@ export function JobForm({
               <div>
                 <span className="text-gray-500">Actual Hours:</span>
                 <div className="text-gray-900 font-medium">
-                  {job.actual_hours || job.actualHours || 0} hrs
+                  {job.actual_hours || 0} hrs
                 </div>
               </div>
               <div>

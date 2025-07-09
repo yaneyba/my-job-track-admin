@@ -3,7 +3,7 @@ import { apiClient } from '@/lib/api';
 import { Button } from '@/components/UI/Button';
 import { Input } from '@/components/UI/Input';
 import { Card, CardContent } from '@/components/UI/Card';
-import { EyeIcon, EyeSlashIcon, UserIcon, LockClosedIcon } from '@heroicons/react/24/outline';
+import { UserIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 
 interface LoginFormProps {
   onSuccess: (user: any) => void;

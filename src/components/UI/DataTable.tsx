@@ -16,13 +16,11 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   MagnifyingGlassIcon,
-  AdjustmentsHorizontalIcon,
-  EyeIcon,
-  EyeSlashIcon
+  AdjustmentsHorizontalIcon
 } from '@heroicons/react/24/outline';
 import { Button } from './Button';
 import { Input } from './Input';
-import { LoadingSpinner, TableSkeleton } from './LoadingSpinner';
+import { TableSkeleton } from './LoadingSpinner';
 import { EmptyState } from './EmptyState';
 
 interface DataTableProps<T> {

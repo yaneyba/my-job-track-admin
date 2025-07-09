@@ -15,8 +15,7 @@ import {
   EyeIcon,
   UserGroupIcon,
   ArrowTrendingUpIcon,
-  SparklesIcon,
-  PlusIcon,
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 import { 
   BarChart, 

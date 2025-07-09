@@ -9,8 +9,7 @@ import { DataTable } from '@/components/UI/DataTable';
 import { Button } from '@/components/UI/Button';
 import { CustomerForm } from '@/components/Forms/CustomerForm';
 import { ConfirmModal } from '@/components/UI/Modal';
-import { StatusBadge } from '@/components/UI/StatusBadge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card';
+import { Card, CardContent } from '@/components/UI/Card';
 import {
   PlusIcon,
   PencilIcon,
@@ -26,7 +25,7 @@ import {
 const columnHelper = createColumnHelper<Customer>();
 
 export function Customers() {
-  const [filters, setFilters] = useState<SearchFilters>({});
+  const [filters] = useState<SearchFilters>({});
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState<'view' | 'create' | 'edit'>('view');
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);

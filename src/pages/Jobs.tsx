@@ -28,7 +28,7 @@ import {
 const columnHelper = createColumnHelper<Job>();
 
 export function Jobs() {
-  const [filters, setFilters] = useState<SearchFilters>({});
+  const [filters] = useState<SearchFilters>({});
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState<'view' | 'create' | 'edit'>('view');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -182,16 +182,16 @@ export function Jobs() {
         );
       },
     }),
-    columnHelper.accessor('estimatedHours', {
+    columnHelper.accessor('estimated_hours', {
       header: 'Time',
       cell: (info) => {
-        const estimated = info.getValue() || info.row.original.estimated_hours || 0;
-        const actual = info.row.original.actualHours || info.row.original.actual_hours || 0;
+        const estimated = info.getValue() || 0;
+        const actual = info.row.original.actual_hours || 0;
         return (
           <div className="text-sm space-y-1">
             <div className="flex items-center text-gray-900">
               <ClockIcon className="h-3 w-3 mr-1 text-gray-400" />
-              {estimated}h est.
+              {estimated || 0}h est.
             </div>
             {actual > 0 && (
               <div className="text-xs text-gray-500">

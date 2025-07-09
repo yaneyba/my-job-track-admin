@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Customer } from '@/types';
 import { Input, Textarea } from '@/components/UI/Input';
@@ -9,8 +9,7 @@ import {
   EnvelopeIcon, 
   PhoneIcon, 
   MapPinIcon,
-  BuildingOfficeIcon,
-  DocumentTextIcon
+  BuildingOfficeIcon
 } from '@heroicons/react/24/outline';
 
 interface CustomerFormProps {
@@ -36,8 +35,7 @@ export function CustomerForm({
   onClose, 
   onSubmit, 
   customer, 
-  mode,
-  loading = false 
+  mode
 }: CustomerFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -45,8 +43,7 @@ export function CustomerForm({
     register,
     handleSubmit,
     reset,
-    formState: { errors, isDirty },
-    watch
+    formState: { errors, isDirty }
   } = useForm<CustomerFormData>({
     defaultValues: {
       name: '',

@@ -398,7 +398,7 @@ export function Analytics() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {events.topEvents?.slice(0, 8).map((event: any, index) => (
+              {events.topEvents?.slice(0, 8).map((event: any) => (
                 <div key={event.eventName} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <div className="flex items-center space-x-3">
                     <div className="w-2 h-2 bg-blue-500 rounded-full" />
@@ -425,7 +425,7 @@ export function Analytics() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {features.topFeatures.slice(0, 8).map((feature, index) => (
+              {features.topFeatures.slice(0, 8).map((feature) => (
                 <div key={feature.featureName} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <div className="flex items-center space-x-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full" />
