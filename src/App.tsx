@@ -6,6 +6,7 @@ import { Dashboard } from '@/pages/Dashboard';
 import { Customers } from '@/pages/Customers';
 import { Jobs } from '@/pages/Jobs';
 import { Analytics } from '@/pages/Analytics';
+import { Examples } from '@/pages/Examples';
 import { Settings } from '@/pages/Settings';
 import { apiClient } from '@/lib/api';
 
@@ -55,6 +56,7 @@ function App() {
         <Route path="/customers" element={<Customers />} />
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/analytics" element={<Analytics />} />
+        <Route path="/examples" element={<Examples />} />
         <Route path="/settings" element={<Settings />} />
       </Routes>
     </Layout>
