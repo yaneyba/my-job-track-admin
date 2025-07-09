@@ -21,10 +21,10 @@ This guide provides step-by-step instructions for using the Analytics data in th
    ```bash
    npm run dev
    ```
-2. Navigate to `http://localhost:5173` in your browser
+2. Navigate to `http://localhost:3001` in your browser
 3. Log in with demo credentials:
-   - Email: `admin@demo.com`
-   - Password: `demo123`
+   - Email: `analytics@test.com`
+   - Password: `analytics123`
 4. Click on "Analytics" in the navigation menu
 
 ### Step 2: Understanding the Analytics Layout
