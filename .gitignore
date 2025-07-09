@@ -13,3 +13,4 @@ Dockerfile
 .dockerignore
 *.tar
 docker-compose.override.yml
+.env
