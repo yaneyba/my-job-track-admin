@@ -74,6 +74,24 @@ import from '@/contexts/*'     // React contexts
 
 The admin interface will be available at `http://localhost:3001`
 
+## 🛠️ Development Tools
+
+The project includes useful scripts in the [`tools/`](./tools/) folder:
+
+### Quick Start Development
+```bash
+./tools/start-dev.sh
+```
+Starts the development environment with proper coordination between services.
+
+### Deployment
+```bash
+./tools/deploy.sh [environment]
+```
+Deploys to different environments (`development`, `staging`, `production`).
+
+**Note:** Make scripts executable if needed: `chmod +x tools/*.sh`
+
 ### Building for Production
 
 ```bash
@@ -107,14 +125,24 @@ The built application in `dist/` can be deployed to any static hosting service:
 ## Project Structure
 
 ```
-src/
-├── components/          # Reusable UI components
-│   ├── Layout/         # Layout components (Sidebar, Header)
-│   └── UI/            # Basic UI components (Button, Input, etc.)
-├── pages/             # Page components
-├── lib/               # Utilities and API client
-├── types/             # TypeScript type definitions
-└── App.tsx           # Main application component
+my-job-track-admin/
+├── src/                         # Source code
+│   ├── components/             # Reusable UI components
+│   │   ├── Layout/            # Layout components (Sidebar, Header)
+│   │   └── UI/               # Basic UI components (Button, Input, etc.)
+│   ├── pages/                 # Page components
+│   ├── lib/                   # Utilities and API client
+│   ├── types/                 # TypeScript type definitions
+│   └── App.tsx               # Main application component
+├── docs/                       # 📁 Documentation
+│   ├── README.md              # Documentation index
+│   ├── CLOUDFLARE_SETUP.md    # Deployment guide
+│   └── IMPLEMENTATION_SUMMARY.md # Technical details
+├── tools/                      # 🛠️ Utility scripts
+│   ├── README.md              # Tools documentation
+│   ├── deploy.sh              # Deployment script
+│   └── start-dev.sh           # Development startup script
+└── ...                        # Configuration files
 ```
 
 ## API Integration
@@ -220,6 +248,12 @@ Additional documentation is available in the [`docs/`](./docs/) folder:
 
 - **[Cloudflare Setup Guide](./docs/CLOUDFLARE_SETUP.md)** - Detailed deployment instructions for Cloudflare Pages
 - **[Implementation Summary](./docs/IMPLEMENTATION_SUMMARY.md)** - Technical implementation details and architecture
+
+### 🛠️ Tools Documentation
+
+Development tools and scripts are documented in the [`tools/`](./tools/) folder:
+
+- **[Tools README](./tools/README.md)** - Complete guide to available development scripts
 
 ## License
 
