@@ -76,7 +76,7 @@ export function Jobs() {
     columnHelper.accessor('priority', {
       header: 'Priority',
       cell: (info) => (
-        <Badge className={getPriorityColor(info.getValue())}>
+        <Badge className={getPriorityColor(info.getValue() || '')}>
           {info.getValue()}
         </Badge>
       ),
@@ -92,7 +92,7 @@ export function Jobs() {
     columnHelper.accessor('paymentStatus', {
       header: 'Payment',
       cell: (info) => (
-        <Badge className={getStatusColor(info.getValue())}>
+        <Badge className={getStatusColor(info.getValue() || '')}>
           {info.getValue()}
         </Badge>
       ),

@@ -12,11 +12,10 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell,
 } from 'recharts';
 import { apiClient } from '@/lib/api';
 import { LoadingSpinner } from '@/components/UI/LoadingSpinner';
-import { AnalyticsFilters, AnalyticsDashboardData } from '@/types';
+import { AnalyticsFilters } from '@/types';
 
 const defaultFilters: AnalyticsFilters = {
   dateRange: {

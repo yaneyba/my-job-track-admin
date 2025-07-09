@@ -1,7 +1,7 @@
 // Example: Custom Analytics Components
 // File: src/components/Analytics/CustomAnalyticsExamples.tsx
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { 
   LineChart, 
@@ -25,7 +25,7 @@ import { AnalyticsFilters, AnalyticsDashboardData } from '@/types';
 
 // STEP 1: Basic Analytics Fetching
 export function BasicAnalyticsExample() {
-  const [filters, setFilters] = useState<AnalyticsFilters>({
+  const [filters] = useState<AnalyticsFilters>({
     dateRange: {
       start: '2025-01-01',
       end: '2025-01-31'
@@ -184,7 +184,7 @@ export function GeographicAnalytics() {
               outerRadius={80}
               label
             >
-              {data?.geographicData?.map((entry, index) => (
+              {data?.geographicData?.map((_entry, index) => (
                 <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
               ))}
             </Pie>
@@ -323,7 +323,7 @@ export function EventAnalytics() {
               outerRadius={100}
               label={({ category, percentage }) => `${category}: ${percentage}%`}
             >
-              {data?.eventCategories?.map((entry, index) => (
+              {data?.eventCategories?.map((_entry, index) => (
                 <Cell key={`cell-${index}`} fill={`hsl(${index * 45}, 70%, 60%)`} />
               ))}
             </Pie>
