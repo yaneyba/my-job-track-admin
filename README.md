@@ -22,6 +22,24 @@ A comprehensive admin interface for managing the My Job Track application data.
 - **React Hook Form** for form management
 - **React Hot Toast** for notifications
 - **Heroicons** for icons
+- **@ Path Aliases** for clean, maintainable imports
+
+## 🔧 Path Aliases
+
+This project uses comprehensive path aliases for clean imports:
+
+```typescript
+// Instead of: import { Component } from '../../../components/UI/Component'
+import { Component } from '@/components/UI/Component'
+
+// Available aliases:
+import from '@/components/*'    // UI components
+import from '@/pages/*'         // Page components  
+import from '@/lib/*'          // Utilities and API
+import from '@/hooks/*'        // Custom React hooks
+import from '@/types'          // TypeScript types
+import from '@/contexts/*'     // React contexts
+```
 
 ## Data Architecture
 
