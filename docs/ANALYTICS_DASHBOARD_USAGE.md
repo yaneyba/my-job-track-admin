@@ -31,11 +31,22 @@ This guide provides step-by-step instructions for using the Analytics data in th
    - Password: `analytics123`
 4. Click on "Analytics" in the navigation menu
 
-**✅ System Status**: As of July 8, 2025, the analytics system is fully operational with all backend issues resolved. All endpoints support date filtering and real-time data display.
+**✅ System Status**: As of July 9, 2025, the analytics system is fully operational with all backend issues resolved. All endpoints support date filtering and real-time data display.
 
-> **🔍 Quick Test**: If you see empty data (all zeros), the API is working correctly but your date range may not contain sample data. Try changing the date range to **2025-01-01 to 2025-12-31** to see the sample analytics data.
+> **🔍 Quick Test**: If you see empty data (all zeros), the API is working correctly but your date range may not contain sample data. **All sample data exists in January 2025 only.** Try changing the date range to **2025-01-01 to 2025-01-31** to see the sample analytics data.
 
-### Step 2: Understanding the Analytics Layout
+### Step 2: Sample Data Available
+**📅 Important Note**: All sample analytics data exists in **January 2025 only**:
+- **January 1-7, 2025**: 4 sessions, 7 events (peak sample data)
+- **January 8-15, 2025**: 2 sessions, 3 events (additional data)
+- **January 16+ and all other months**: No sample data
+
+**To see analytics data**:
+- Set date range to **January 1-31, 2025** (or 2025-01-01 to 2025-01-31)
+- Or clear all date filters to view unfiltered data
+- Current date ranges (June+ 2025) will show empty results
+
+### Step 3: Understanding the Analytics Layout
 The Analytics page is organized into several sections:
 - **Overview Metrics**: Key performance indicators at the top
 - **Session Analytics**: User session data and patterns
@@ -55,7 +66,7 @@ The analytics system currently contains real sample data:
 - **Device breakdown**: 87.5% desktop, 12.5% mobile usage
 - **Feature tracking** across 11 different features
 
-> **📅 Important**: Sample data exists but may not fall within the default date range (June-July 2025). To see the data, use a broader date range like **2025-01-01 to 2025-12-31** or clear all date filters.
+> **📅 Important**: Sample data exists **only in January 2025** (specifically January 1-15, 2025). To see the data, use date range **2025-01-01 to 2025-01-31** or clear all date filters. Any date ranges outside of January 2025 will return empty results.
 
 ### Key Metrics Display
 The overview section shows:
@@ -286,9 +297,10 @@ export function CustomAnalyticsView() {
 
 **Solutions**:
 - **✅ System Working**: API now returns proper responses (no more 500 errors)
-- **Check Date Range**: Most common issue - sample data may be outside your selected date range
-  - **Try**: Set date range to **2025-01-01 to 2025-12-31** to see all sample data
+- **Check Date Range**: Most common issue - sample data exists **only in January 2025**
+  - **Try**: Set date range to **2025-01-01 to 2025-01-31** to see all sample data
   - **Or**: Clear all date filters to view unfiltered data
+  - **Note**: Dates outside January 2025 will return empty results (this is expected)
 - **Verify API Connection**: API endpoint `https://myjobtrack-api.yeb404974.workers.dev` should be accessible
 - **Authentication**: Ensure login with `analytics@test.com` / `analytics123`
 - **Browser Console**: Check for error messages or network issues
@@ -330,9 +342,9 @@ export function CustomAnalyticsView() {
 **Problem**: Analytics show unexpected values
 
 **Solutions**:
-- **Date Range**: Verify filters are set correctly (sample data spans 2025)
+- **Date Range**: Verify filters are set correctly (sample data only in January 2025)
 - **Timezone**: All data stored in UTC, displayed in local time
-- **Sample Data**: Current data includes 8 sessions, 12 events - small dataset
+- **Sample Data**: Current data includes 8 sessions, 12 events - small dataset in January 2025 only
 - **Filter Combinations**: Multiple filters may result in empty results
 - **Clear Filters**: Reset all filters to see complete dataset
 
@@ -374,9 +386,9 @@ curl -X POST "https://myjobtrack-api.yeb404974.workers.dev/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email":"analytics@test.com","password":"analytics123"}'
 
-# Test analytics endpoint with broad date range (replace TOKEN with actual token)
+# Test analytics endpoint with January 2025 date range (replace TOKEN with actual token)
 curl -H "Authorization: Bearer TOKEN" \
-  "https://myjobtrack-api.yeb404974.workers.dev/api/analytics/dashboard?startDate=2025-01-01&endDate=2025-12-31"
+  "https://myjobtrack-api.yeb404974.workers.dev/api/analytics/dashboard?startDate=2025-01-01&endDate=2025-01-31"
 
 # Test without date filters to see all data
 curl -H "Authorization: Bearer TOKEN" \
@@ -386,19 +398,36 @@ curl -H "Authorization: Bearer TOKEN" \
 **Expected Results:**
 - ✅ **200 OK** response (no more 500 errors)
 - ✅ **JSON structure** with overview, sessions, events, features, funnels, abTests
-- ✅ **Real data** when using broad date range (2025-01-01 to 2025-12-31)
-- ✅ **Empty data** (zeros/empty arrays) for narrow date ranges outside sample data period
+- ✅ **Real data** when using January 2025 date range (2025-01-01 to 2025-01-31)
+- ✅ **Empty data** (zeros/empty arrays) for any date ranges outside January 2025
 
-### Available Debug Tools
-The project includes testing tools in the root directory:
-- **`debug-analytics-queries.js`** - Comprehensive endpoint testing
-- **`test-analytics-api.js`** - Authentication and data flow verification
+## Understanding Empty Results
 
-Run these tools to verify system status:
-```bash
-node debug-analytics-queries.js
-node test-analytics-api.js
+When you see a response like this:
+```json
+{
+    "overview": {
+        "totalSessions": 0,
+        "totalEvents": 0,
+        "averageSessionDuration": 0,
+        "conversionRate": 0,
+        "demoModeUsage": 0,
+        "topLandingPages": [],
+        "topExitPages": [],
+        "userTypeBreakdown": []
+    },
+    // ... all other sections with zeros/empty arrays
+}
 ```
+
+**This is normal and expected behavior when:**
+- ✅ The API is working correctly (200 OK response)
+- ✅ Your authentication is valid
+- ❌ Your selected date range contains no sample data
+
+**Example**: The URL `?startDate=2025-06-09&endDate=2025-07-09` returns empty results because no sample data exists in June-July 2025. All sample data is in January 2025.
+
+**To see actual data**: Change the date range to `?startDate=2025-01-01&endDate=2025-01-31` or remove date filters entirely.
 
 ## Best Practices
 
