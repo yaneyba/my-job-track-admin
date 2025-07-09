@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { apiClient } from '@/lib/api';
 import { Button } from '@/components/UI/Button';
 import { Input } from '@/components/UI/Input';
+import { Card, CardContent } from '@/components/UI/Card';
+import { EyeIcon, EyeSlashIcon, UserIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 
 interface LoginFormProps {
   onSuccess: (user: any) => void;
@@ -34,66 +36,82 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        {/* Header */}
+        <div className="text-center">
+          <div className="mx-auto h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
+            <UserIcon className="h-6 w-6 text-white" />
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900">
             Job Track Admin
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Sign in to access the admin dashboard
+          <p className="mt-2 text-gray-600">
+            Sign in to access your dashboard
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
 
-          {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="text-sm text-red-700">{error}</div>
-            </div>
-          )}
+        {/* Login Card */}
+        <Card className="shadow-xl border-0">
+          <CardContent className="p-8">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div className="space-y-4">
+                <Input
+                  label="Email address"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  leftIcon={<UserIcon className="h-5 w-5" />}
+                  variant="filled"
+                />
+                
+                <Input
+                  label="Password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  leftIcon={<LockClosedIcon className="h-5 w-5" />}
+                  variant="filled"
+                />
+              </div>
 
-          <div>
-            <Button
-              type="submit"
-              className="group relative w-full flex justify-center"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Signing in...' : 'Sign in'}
-            </Button>
-          </div>
-        </form>
+              {error && (
+                <div className="rounded-lg bg-red-50 p-4 border border-red-200 animate-in slide-in-from-top-1">
+                  <div className="text-sm text-red-700">{error}</div>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                loading={isLoading}
+              >
+                {isLoading ? 'Signing in...' : 'Sign in'}
+              </Button>
+            </form>
+
+            {/* Demo credentials hint */}
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <p className="text-sm text-blue-800 font-medium mb-1">Demo Credentials:</p>
+              <p className="text-xs text-blue-600">
+                Email: analytics@test.com<br />
+                Password: analytics123
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Footer */}
+        <div className="text-center text-sm text-gray-500">
+          <p>Secure admin access for job tracking management</p>
+        </div>
       </div>
     </div>
   );
