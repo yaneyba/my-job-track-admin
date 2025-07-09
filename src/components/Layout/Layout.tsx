@@ -8,6 +8,7 @@ import {
   Cog6ToothIcon,
   Bars3Icon,
   XMarkIcon,
+  ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 
 interface SidebarProps {
@@ -86,9 +87,10 @@ function Sidebar({ open, setOpen }: SidebarProps) {
 
 interface LayoutProps {
   children: ReactNode;
+  onLogout?: () => void;
 }
 
-export function Layout({ children }: LayoutProps) {
+export function Layout({ children, onLogout }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
   return (
@@ -110,6 +112,15 @@ export function Layout({ children }: LayoutProps) {
               <span className="text-sm text-gray-500">
                 Welcome to Job Track Admin
               </span>
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  className="flex items-center text-sm text-gray-600 hover:text-gray-900"
+                >
+                  <ArrowRightOnRectangleIcon className="h-4 w-4 mr-1" />
+                  Logout
+                </button>
+              )}
             </div>
           </div>
         </header>

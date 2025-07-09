@@ -6,7 +6,13 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-export function Input({ className, label, error, ...props }: InputProps) {
+export function Input({ className, label, error, onPaste, ...props }: InputProps) {
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    // Ensure paste is always allowed
+    if (onPaste) {
+      onPaste(e);
+    }
+  };
   return (
     <div className="space-y-1">
       {label && (
@@ -16,10 +22,18 @@ export function Input({ className, label, error, ...props }: InputProps) {
       )}
       <input
         className={cn(
-          'input-field w-full',
-          error ? 'border-red-300 focus:ring-red-500' : '',
+          'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400',
+          'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+          'text-gray-900 bg-white',
+          error ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : '',
           className
         )}
+        style={{ 
+          userSelect: 'text',
+          WebkitUserSelect: 'text',
+          MozUserSelect: 'text'
+        }}
+        onPaste={handlePaste}
         {...props}
       />
       {error && (

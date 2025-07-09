@@ -1,17 +1,55 @@
 import { Customer, Job, User, DashboardStats, ApiResponse, PaginatedResponse, SearchFilters } from '@/types';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 class ApiClient {
+  private token: string | null = null;
+
+  constructor() {
+    // Try to load token from localStorage
+    this.token = localStorage.getItem('admin_token');
+  }
+
+  setToken(token: string) {
+    this.token = token;
+    localStorage.setItem('admin_token', token);
+  }
+
+  clearToken() {
+    this.token = null;
+    localStorage.removeItem('admin_token');
+  }
+
+  private getAuthHeaders(): Record<string, string> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    
+    if (this.token) {
+      headers['Authorization'] = `Bearer ${this.token}`;
+    }
+    
+    return headers;
+  }
+
+  private buildUrl(endpoint: string): string {
+    // If API_BASE_URL is a full URL (starts with http), use it directly
+    if (API_BASE_URL.startsWith('http')) {
+      return `${API_BASE_URL}${endpoint}`;
+    }
+    // If it's a relative path (like /api), use it as a prefix
+    return `${API_BASE_URL}${endpoint}`;
+  }
+
   private async request<T>(
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = this.buildUrl(endpoint);
     
     const config: RequestInit = {
       headers: {
-        'Content-Type': 'application/json',
+        ...this.getAuthHeaders(),
         ...options.headers,
       },
       ...options,
@@ -50,10 +88,37 @@ class ApiClient {
     }
   }
 
+  // Authentication APIs
+  async login(email: string, password: string): Promise<{ success: boolean; user?: any; error?: string }> {
+    try {
+      const response = await this.request<{ success: boolean; token?: string; user?: any; error?: string }>('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.success && response.token) {
+        this.setToken(response.token);
+        return { success: true, user: response.user };
+      } else {
+        return { success: false, error: response.error || 'Login failed' };
+      }
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : 'Login failed' };
+    }
+  }
+
+  logout() {
+    this.clearToken();
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.token;
+  }
+
   // Dashboard APIs
   async getDashboardStats(): Promise<DashboardStats> {
-    const response = await this.request<ApiResponse<DashboardStats>>('/dashboard/stats');
-    return response.data;
+    const response = await this.request<DashboardStats>('/api/dashboard/stats');
+    return response;
   }
 
   // Customer APIs
@@ -65,34 +130,34 @@ class ApiClient {
     
     const query = params.toString();
     const response = await this.request<PaginatedResponse<Customer>>(
-      `/customers${query ? `?${query}` : ''}`
+      `/api/customers${query ? `?${query}` : ''}`
     );
     return response;
   }
 
   async getCustomer(id: string): Promise<Customer> {
-    const response = await this.request<ApiResponse<Customer>>(`/customers/${id}`);
-    return response.data;
+    const response = await this.request<Customer>(`/api/customers/${id}`);
+    return response;
   }
 
   async createCustomer(customer: Omit<Customer, 'id' | 'createdAt' | 'updatedAt'>): Promise<Customer> {
-    const response = await this.request<ApiResponse<Customer>>('/customers', {
+    const response = await this.request<Customer>('/api/customers', {
       method: 'POST',
       body: JSON.stringify(customer),
     });
-    return response.data;
+    return response;
   }
 
   async updateCustomer(id: string, customer: Partial<Customer>): Promise<Customer> {
-    const response = await this.request<ApiResponse<Customer>>(`/customers/${id}`, {
+    const response = await this.request<Customer>(`/api/customers/${id}`, {
       method: 'PUT',
       body: JSON.stringify(customer),
     });
-    return response.data;
+    return response;
   }
 
   async deleteCustomer(id: string): Promise<void> {
-    await this.request(`/customers/${id}`, {
+    await this.request(`/api/customers/${id}`, {
       method: 'DELETE',
     });
   }
@@ -109,55 +174,55 @@ class ApiClient {
     
     const query = params.toString();
     const response = await this.request<PaginatedResponse<Job>>(
-      `/jobs${query ? `?${query}` : ''}`
+      `/api/jobs${query ? `?${query}` : ''}`
     );
     return response;
   }
 
   async getJob(id: string): Promise<Job> {
-    const response = await this.request<ApiResponse<Job>>(`/jobs/${id}`);
-    return response.data;
+    const response = await this.request<Job>(`/api/jobs/${id}`);
+    return response;
   }
 
   async createJob(job: Omit<Job, 'id' | 'createdAt' | 'updatedAt'>): Promise<Job> {
-    const response = await this.request<ApiResponse<Job>>('/jobs', {
+    const response = await this.request<Job>('/api/jobs', {
       method: 'POST',
       body: JSON.stringify(job),
     });
-    return response.data;
+    return response;
   }
 
   async updateJob(id: string, job: Partial<Job>): Promise<Job> {
-    const response = await this.request<ApiResponse<Job>>(`/jobs/${id}`, {
+    const response = await this.request<Job>(`/api/jobs/${id}`, {
       method: 'PUT',
       body: JSON.stringify(job),
     });
-    return response.data;
+    return response;
   }
 
   async deleteJob(id: string): Promise<void> {
-    await this.request(`/jobs/${id}`, {
+    await this.request(`/api/jobs/${id}`, {
       method: 'DELETE',
     });
   }
 
   // User APIs
   async getUsers(): Promise<User[]> {
-    const response = await this.request<ApiResponse<User[]>>('/users');
-    return response.data;
+    const response = await this.request<User[]>('/api/users');
+    return response;
   }
 
   async getUser(id: string): Promise<User> {
-    const response = await this.request<ApiResponse<User>>(`/users/${id}`);
-    return response.data;
+    const response = await this.request<User>(`/api/users/${id}`);
+    return response;
   }
 
   async createUser(user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User> {
-    const response = await this.request<ApiResponse<User>>('/users', {
+    const response = await this.request<User>('/api/users', {
       method: 'POST',
       body: JSON.stringify(user),
     });
-    return response.data;
+    return response;
   }
 
   async updateUser(id: string, user: Partial<User>): Promise<User> {
