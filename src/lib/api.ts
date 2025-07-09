@@ -1,4 +1,4 @@
-import { Customer, Job, User, DashboardStats, ApiResponse, PaginatedResponse, SearchFilters } from '@/types';
+import { Customer, Job, User, DashboardStats, ApiResponse, PaginatedResponse, SearchFilters, AnalyticsFilters, AnalyticsDashboardData, AnalyticsOverview, AnalyticsSessionMetrics, AnalyticsEventMetrics, FeatureUsageMetrics, FunnelAnalytics, ABTestResults } from '@/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
@@ -237,6 +237,117 @@ class ApiClient {
     await this.request(`/users/${id}`, {
       method: 'DELETE',
     });
+  }
+
+  // Analytics APIs
+  async getAnalyticsDashboard(filters?: AnalyticsFilters): Promise<AnalyticsDashboardData> {
+    const params = new URLSearchParams();
+    if (filters?.dateRange) {
+      params.append('startDate', filters.dateRange.start);
+      params.append('endDate', filters.dateRange.end);
+    }
+    if (filters?.userType) {
+      params.append('userType', filters.userType.join(','));
+    }
+    if (filters?.demoMode !== undefined) {
+      params.append('demoMode', filters.demoMode.toString());
+    }
+    if (filters?.country) {
+      params.append('country', filters.country.join(','));
+    }
+    if (filters?.eventCategory) {
+      params.append('eventCategory', filters.eventCategory.join(','));
+    }
+
+    const query = params.toString();
+    const response = await this.request<AnalyticsDashboardData>(
+      `/api/analytics/dashboard${query ? `?${query}` : ''}`
+    );
+    return response;
+  }
+
+  async getAnalyticsOverview(filters?: AnalyticsFilters): Promise<AnalyticsOverview> {
+    const params = new URLSearchParams();
+    if (filters?.dateRange) {
+      params.append('startDate', filters.dateRange.start);
+      params.append('endDate', filters.dateRange.end);
+    }
+
+    const query = params.toString();
+    const response = await this.request<AnalyticsOverview>(
+      `/api/analytics/overview${query ? `?${query}` : ''}`
+    );
+    return response;
+  }
+
+  async getSessionMetrics(filters?: AnalyticsFilters): Promise<AnalyticsSessionMetrics> {
+    const params = new URLSearchParams();
+    if (filters?.dateRange) {
+      params.append('startDate', filters.dateRange.start);
+      params.append('endDate', filters.dateRange.end);
+    }
+
+    const query = params.toString();
+    const response = await this.request<AnalyticsSessionMetrics>(
+      `/api/analytics/sessions${query ? `?${query}` : ''}`
+    );
+    return response;
+  }
+
+  async getEventMetrics(filters?: AnalyticsFilters): Promise<AnalyticsEventMetrics> {
+    const params = new URLSearchParams();
+    if (filters?.dateRange) {
+      params.append('startDate', filters.dateRange.start);
+      params.append('endDate', filters.dateRange.end);
+    }
+
+    const query = params.toString();
+    const response = await this.request<AnalyticsEventMetrics>(
+      `/api/analytics/events${query ? `?${query}` : ''}`
+    );
+    return response;
+  }
+
+  async getFeatureUsage(filters?: AnalyticsFilters): Promise<FeatureUsageMetrics> {
+    const params = new URLSearchParams();
+    if (filters?.dateRange) {
+      params.append('startDate', filters.dateRange.start);
+      params.append('endDate', filters.dateRange.end);
+    }
+
+    const query = params.toString();
+    const response = await this.request<FeatureUsageMetrics>(
+      `/api/analytics/features${query ? `?${query}` : ''}`
+    );
+    return response;
+  }
+
+  async getFunnelAnalytics(filters?: AnalyticsFilters): Promise<FunnelAnalytics> {
+    const params = new URLSearchParams();
+    if (filters?.dateRange) {
+      params.append('startDate', filters.dateRange.start);
+      params.append('endDate', filters.dateRange.end);
+    }
+
+    const query = params.toString();
+    const response = await this.request<FunnelAnalytics>(
+      `/api/analytics/funnels${query ? `?${query}` : ''}`
+    );
+    return response;
+  }
+
+  async getABTestResults(filters?: AnalyticsFilters): Promise<ABTestResults[]> {
+    const params = new URLSearchParams();
+    if (filters?.dateRange) {
+      params.append('startDate', filters.dateRange.start);
+      params.append('endDate', filters.dateRange.end);
+    }
+
+    const query = params.toString();
+    const response = await this.request<ABTestResults[]>(
+      `/api/analytics/ab-tests${query ? `?${query}` : ''}`
+    );
+    return response;
   }
 }
 

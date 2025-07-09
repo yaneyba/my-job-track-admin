@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Bar, Line, Pie } from 'recharts';
 import {
   BarChart,
@@ -10,124 +12,265 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { apiClient } from '@/lib/api';
+import { LoadingSpinner } from '@/components/UI/LoadingSpinner';
+import { AnalyticsFilters } from '@/types';
 
-// Mock data - in real app, this would come from API
-const monthlyRevenue = [
-  { month: 'Jan', revenue: 12000, jobs: 45 },
-  { month: 'Feb', revenue: 19000, jobs: 52 },
-  { month: 'Mar', revenue: 15000, jobs: 48 },
-  { month: 'Apr', revenue: 22000, jobs: 61 },
-  { month: 'May', revenue: 18000, jobs: 55 },
-  { month: 'Jun', revenue: 25000, jobs: 68 },
-];
-
-const jobStatusData = [
-  { name: 'Completed', value: 124, color: '#10B981' },
-  { name: 'In Progress', value: 32, color: '#F59E0B' },
-  { name: 'Scheduled', value: 18, color: '#3B82F6' },
-  { name: 'Cancelled', value: 5, color: '#EF4444' },
-];
-
-const customerGrowth = [
-  { month: 'Jan', customers: 120 },
-  { month: 'Feb', customers: 135 },
-  { month: 'Mar', customers: 148 },
-  { month: 'Apr', customers: 162 },
-  { month: 'May', customers: 171 },
-  { month: 'Jun', customers: 185 },
-];
+const defaultFilters: AnalyticsFilters = {
+  dateRange: {
+    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days ago
+    end: new Date().toISOString().split('T')[0] // today
+  }
+};
 
 export function Analytics() {
+  const [filters, setFilters] = useState<AnalyticsFilters>(defaultFilters);
+
+  const { data: analyticsData, isLoading, error } = useQuery({
+    queryKey: ['analytics-dashboard', filters],
+    queryFn: () => apiClient.getAnalyticsDashboard(filters),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-red-600 mb-4">
+          Failed to load analytics data
+        </div>
+        <p className="text-gray-500">
+          {error instanceof Error ? error.message : 'Unknown error occurred'}
+        </p>
+      </div>
+    );
+  }
+
+  if (!analyticsData) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-gray-600 mb-4">
+          No analytics data available
+        </div>
+        <p className="text-gray-500">
+          Start tracking user interactions to see analytics data here.
+        </p>
+      </div>
+    );
+  }
+
+  const { overview, sessions, events, features, funnels } = analyticsData;
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Business insights and performance metrics
+          User behavior insights and engagement metrics
         </p>
       </div>
 
-      {/* Revenue and Jobs Chart */}
+      {/* Date Range Filter */}
+      <div className="bg-white p-4 rounded-lg shadow">
+        <div className="flex items-center space-x-4">
+          <div>
+            <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">
+              Start Date
+            </label>
+            <input
+              type="date"
+              id="startDate"
+              value={filters.dateRange.start}
+              onChange={(e) => setFilters({
+                ...filters,
+                dateRange: { ...filters.dateRange, start: e.target.value }
+              })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">
+              End Date
+            </label>
+            <input
+              type="date"
+              id="endDate"
+              value={filters.dateRange.end}
+              onChange={(e) => setFilters({
+                ...filters,
+                dateRange: { ...filters.dateRange, end: e.target.value }
+              })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Overview Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white p-6 rounded-lg shadow">
+          <div className="flex items-center">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-gray-600">Total Sessions</p>
+              <p className="text-2xl font-bold text-gray-900">{overview.totalSessions.toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow">
+          <div className="flex items-center">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-gray-600">Total Events</p>
+              <p className="text-2xl font-bold text-gray-900">{overview.totalEvents.toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow">
+          <div className="flex items-center">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-gray-600">Conversion Rate</p>
+              <p className="text-2xl font-bold text-gray-900">{overview.conversionRate.toFixed(1)}%</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow">
+          <div className="flex items-center">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-gray-600">Avg Session Duration</p>
+              <p className="text-2xl font-bold text-gray-900">{Math.round(overview.averageSessionDuration / 60)}m</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Session Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Monthly Revenue & Jobs</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Daily Sessions</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={monthlyRevenue}>
+            <LineChart data={sessions.dailySessions}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis yAxisId="left" orientation="left" />
-              <YAxis yAxisId="right" orientation="right" />
+              <XAxis dataKey="date" />
+              <YAxis />
               <Tooltip />
-              <Legend />
-              <Bar yAxisId="left" dataKey="revenue" fill="#3B82F6" name="Revenue ($)" />
-              <Bar yAxisId="right" dataKey="jobs" fill="#10B981" name="Jobs" />
-            </BarChart>
+              <Line type="monotone" dataKey="count" stroke="#3B82F6" strokeWidth={2} />
+            </LineChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Job Status Distribution */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Job Status Distribution</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Session Duration Distribution</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={sessions.sessionDuration}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="range" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="count" fill="#10B981" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* User Type Breakdown */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">User Type Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
-                data={jobStatusData}
+                data={overview.userTypeBreakdown}
+                dataKey="count"
+                nameKey="userType"
                 cx="50%"
                 cy="50%"
-                labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                 outerRadius={80}
                 fill="#8884d8"
-                dataKey="value"
+                label={({ userType, percentage }) => `${userType}: ${percentage}%`}
               />
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
         </div>
+
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Geographic Distribution</h3>
+          <div className="space-y-3">
+            {sessions.geographicData.slice(0, 5).map((geo) => (
+              <div key={geo.country} className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">{geo.country}</span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-20 bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full" 
+                      style={{ width: `${geo.percentage}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm font-medium">{geo.sessions}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Customer Growth */}
+      {/* Event Analytics */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Top Events</h3>
+          <div className="space-y-3">
+            {events.topEvents.slice(0, 8).map((event) => (
+              <div key={event.eventName} className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">{event.eventName}</span>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium">{event.count}</span>
+                  <span className="text-xs text-gray-400">({event.uniqueSessions} sessions)</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Feature Usage</h3>
+          <div className="space-y-3">
+            {features.topFeatures.slice(0, 8).map((feature) => (
+              <div key={feature.featureName} className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">{feature.featureName}</span>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium">{feature.usage}</span>
+                  <span className="text-xs text-gray-400">{feature.adoptionRate.toFixed(1)}% adoption</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Conversion Funnel */}
       <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Customer Growth</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={customerGrowth}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="customers"
-              stroke="#3B82F6"
-              strokeWidth={2}
-              name="Total Customers"
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="text-2xl font-bold text-gray-900">$125,000</div>
-          <div className="text-sm text-gray-500">Total Revenue (YTD)</div>
-          <div className="text-sm text-green-600">+12.5% from last year</div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="text-2xl font-bold text-gray-900">289</div>
-          <div className="text-sm text-gray-500">Total Jobs Completed</div>
-          <div className="text-sm text-green-600">+8.3% from last month</div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="text-2xl font-bold text-gray-900">185</div>
-          <div className="text-sm text-gray-500">Active Customers</div>
-          <div className="text-sm text-green-600">+15.2% from last month</div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="text-2xl font-bold text-gray-900">$432</div>
-          <div className="text-sm text-gray-500">Average Job Value</div>
-          <div className="text-sm text-red-600">-3.1% from last month</div>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Conversion Funnel</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {funnels.conversionFunnel.map((step, index) => (
+            <div key={step.step} className="text-center">
+              <div className="bg-blue-100 rounded-lg p-4 mb-2">
+                <div className="text-2xl font-bold text-blue-900">{step.users}</div>
+                <div className="text-sm text-blue-700">{step.conversionRate.toFixed(1)}%</div>
+              </div>
+              <div className="text-sm text-gray-600">{step.step}</div>
+              {index < funnels.conversionFunnel.length - 1 && (
+                <div className="text-xs text-red-500 mt-1">
+                  -{step.dropOffRate.toFixed(1)}% drop-off
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>

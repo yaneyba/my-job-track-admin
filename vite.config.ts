@@ -20,9 +20,9 @@ export default defineConfig({
     port: 3001,
     proxy: {
       '/api': {
-        target: 'http://localhost:8787',
+        target: 'https://myjobtrack-api.yeb404974.workers.dev',
         changeOrigin: true,
-        secure: false
+        secure: true
       }
     }
   }
