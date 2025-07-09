@@ -258,3 +258,4 @@ Development tools and scripts are documented in the [`tools/`](./tools/) folder:
 ## License
 
 This project is part of the My Job Track application suite.
+
