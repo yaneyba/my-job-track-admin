@@ -214,6 +214,13 @@ The project uses TailwindCSS with a custom design system. Key classes are define
 - Check if proxy configuration in `vite.config.ts` is correct
 - Verify no firewall is blocking local connections
 
+## 📚 Documentation
+
+Additional documentation is available in the [`docs/`](./docs/) folder:
+
+- **[Cloudflare Setup Guide](./docs/CLOUDFLARE_SETUP.md)** - Detailed deployment instructions for Cloudflare Pages
+- **[Implementation Summary](./docs/IMPLEMENTATION_SUMMARY.md)** - Technical implementation details and architecture
+
 ## License
 
 This project is part of the My Job Track application suite.
